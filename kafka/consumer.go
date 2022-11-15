@@ -1,4 +1,4 @@
-package main
+package kafka
 
 import (
 	"log"
@@ -10,7 +10,9 @@ import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
-func ConsumeFromQueue(kafkaConfig kafka.ConfigMap, topic string) {
+type Consumer struct{}
+
+func (*Consumer) Do(kafkaConfig kafka.ConfigMap, topic string) {
 	kafkaConfig["group.id"] = "go-kafka-tutorial"
 	kafkaConfig["auto.offset.reset"] = "earliest"
 

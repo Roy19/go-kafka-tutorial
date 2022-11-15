@@ -1,18 +1,27 @@
 package main
 
 import (
-	"fmt"
+	"go-kafka-tutorial/interfaces"
+	"go-kafka-tutorial/kafka"
 	"log"
 	"os"
 )
 
+const (
+	produce = "produce"
+	consume = "consume"
+)
+
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Printf("Usage: kafka-tutorial <config file> command\n\n" +
+		log.Fatalf("Usage: kafka-tutorial <config file> command\n\n" +
 			"Commands:\n" +
 			"produce    produce events to kafka queue\n" +
 			"consume    consume events from kafka queue\n")
-		os.Exit(1)
+	}
+
+	if os.Args[2] != produce && os.Args[2] != consume {
+		log.Fatalf("Wrong command")
 	}
 
 	configFile := os.Args[1]
@@ -20,12 +29,10 @@ func main() {
 
 	topic := "go-kafka-topic"
 
-	switch {
-	case os.Args[2] == "produce":
-		ProduceToQueue(conf, topic)
-	case os.Args[2] == "consume":
-		ConsumeFromQueue(conf, topic)
-	default:
-		log.Fatal("Wrong command")
+	tasks := map[string]interfaces.IAction{
+		produce: &kafka.Producer{},
+		consume: &kafka.Consumer{},
 	}
+
+	tasks[os.Args[2]].Do(conf, topic)
 }

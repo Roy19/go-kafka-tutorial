@@ -1,4 +1,4 @@
-package main
+package kafka
 
 import (
 	"log"
@@ -7,7 +7,9 @@ import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
-func ProduceToQueue(kafkaConfig kafka.ConfigMap, topic string) {
+type Producer struct{}
+
+func (*Producer) Do(kafkaConfig kafka.ConfigMap, topic string) {
 	producer, err := kafka.NewProducer(&kafkaConfig)
 
 	if err != nil {
