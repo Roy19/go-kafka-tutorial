@@ -1,0 +1,10 @@
+{
+    "namespace": "com.example.avroschema",
+    "type": "record",
+    "name": "User",
+    "fields": [
+        {"name": "user_id", "type": "int"},
+        {"name": "user_name", "type": "string"},
+        {"name": "phone_number", "type": "string"}
+    ]
+}
