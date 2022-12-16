@@ -14,9 +14,8 @@ import (
 
 type Producer struct{}
 
-func (*Producer) Do(kafkaConfig kafka.ConfigMap, topic string) {
-	schemaRegsitryUrl := kafkaConfig["schema.registry"].(string)
-	client, err := schemaregistry.NewClient(schemaregistry.NewConfig(schemaRegsitryUrl))
+func (*Producer) Do(kafkaConfig kafka.ConfigMap, topic string, schemaRegistryUrl string) {
+	client, err := schemaregistry.NewClient(schemaregistry.NewConfig(schemaRegistryUrl))
 	if err != nil {
 		log.Fatalf("Failed to initialize connection to schema registry, %v", err)
 	}

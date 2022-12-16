@@ -15,12 +15,11 @@ import (
 
 type Consumer struct{}
 
-func (*Consumer) Do(kafkaConfig kafka.ConfigMap, topic string) {
+func (*Consumer) Do(kafkaConfig kafka.ConfigMap, topic string, schemaRegistryUrl string) {
 	kafkaConfig["group.id"] = "go-kafka-tutorial"
 	kafkaConfig["auto.offset.reset"] = "earliest"
 
-	schemaRegsitryUrl := kafkaConfig["schema.registry"].(string)
-	client, err := schemaregistry.NewClient(schemaregistry.NewConfig(schemaRegsitryUrl))
+	client, err := schemaregistry.NewClient(schemaregistry.NewConfig(schemaRegistryUrl))
 	if err != nil {
 		log.Fatalf("Failed to initialize connection to schema registry, %v", err)
 	}

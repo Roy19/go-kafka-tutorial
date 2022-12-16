@@ -34,5 +34,5 @@ func main() {
 		consume: &kafka.Consumer{},
 	}
 
-	tasks[os.Args[2]].Do(conf, topic)
+	tasks[os.Args[2]].Do(conf, topic, "http://schema-registry:8081")
 }
