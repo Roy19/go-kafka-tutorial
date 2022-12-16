@@ -1,17 +1,31 @@
 package kafka
 
 import (
+	"go-kafka-tutorial/dtos"
 	"log"
 	"math/rand"
+	"strconv"
 
+	"github.com/confluentinc/confluent-kafka-go/schemaregistry"
+	"github.com/confluentinc/confluent-kafka-go/schemaregistry/serde"
+	"github.com/confluentinc/confluent-kafka-go/schemaregistry/serde/avro"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
 type Producer struct{}
 
 func (*Producer) Do(kafkaConfig kafka.ConfigMap, topic string) {
-	producer, err := kafka.NewProducer(&kafkaConfig)
+	schemaRegsitryUrl := kafkaConfig["schema.registry"].(string)
+	client, err := schemaregistry.NewClient(schemaregistry.NewConfig(schemaRegsitryUrl))
+	if err != nil {
+		log.Fatalf("Failed to initialize connection to schema registry, %v", err)
+	}
+	ser, err := avro.NewSpecificSerializer(client, serde.ValueSerde, avro.NewSerializerConfig())
+	if err != nil {
+		log.Fatalf("Failed to initialize value serializer, %v", err)
+	}
 
+	producer, err := kafka.NewProducer(&kafkaConfig)
 	if err != nil {
 		log.Fatal("Failed to register a producer", err.Error())
 	}
@@ -33,19 +47,25 @@ func (*Producer) Do(kafkaConfig kafka.ConfigMap, topic string) {
 	}()
 
 	users := []string{"eabara", "jsmith", "sgarcia", "jbernard", "htanaka", "awalther"}
-	items := []string{"book", "alarm clock", "t-shirts", "gift card", "batteries"}
 
 	for n := 0; n < 100; n++ {
-		user := users[rand.Intn(len(users))]
-		item := items[rand.Intn(len(items))]
+		user := dtos.User{
+			User_id:      int32(n),
+			User_name:    users[rand.Intn(len(users))],
+			Phone_number: "1234567890",
+		}
+		payload, err := ser.Serialize(topic, &user)
+		if err != nil {
+			log.Printf("Failed to serialize: %v\n", user)
+		}
 
 		producer.Produce(&kafka.Message{
 			TopicPartition: kafka.TopicPartition{
 				Topic:     &topic,
 				Partition: kafka.PartitionAny,
 			},
-			Key:   []byte(user),
-			Value: []byte(item),
+			Key:   []byte(strconv.Itoa(n)),
+			Value: payload,
 		}, nil)
 	}
 
