@@ -4,7 +4,7 @@ import (
 	"log"
 	"math/rand"
 
-	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 type Producer struct{}
