@@ -3,6 +3,7 @@ package main
 import (
 	"go-kafka-tutorial/interfaces"
 	"go-kafka-tutorial/kafka"
+	"go-kafka-tutorial/utils"
 	"log"
 	"os"
 )
@@ -33,5 +34,5 @@ func main() {
 		consume: &kafka.Consumer{},
 	}
 
-	tasks[os.Args[2]].Do(conf, topic)
+	tasks[os.Args[1]].Do(conf, topic)
 }

@@ -1,10 +1,7 @@
 package utils
 
 import (
-	"bufio"
-	"fmt"
 	"os"
-	"strings"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
