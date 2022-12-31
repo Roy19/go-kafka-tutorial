@@ -9,7 +9,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func ReadConfig(configFile string) kafka.ConfigMap {
+func ReadConfig() kafka.ConfigMap {
 	return kafka.ConfigMap{
 		"bootstrap.servers": os.Getenv("KAFKA_EVENTHUB_ENDPOINT"),
 		"sasl.mechanisms":   "PLAIN",

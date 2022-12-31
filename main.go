@@ -13,19 +13,18 @@ const (
 )
 
 func main() {
-	if len(os.Args) != 3 {
+	if len(os.Args) != 2 {
 		log.Fatalf("Usage: kafka-tutorial command\n\n" +
 			"Commands:\n" +
 			"produce    produce events to kafka queue\n" +
 			"consume    consume events from kafka queue\n")
 	}
 
-	if os.Args[2] != produce && os.Args[2] != consume {
+	if os.Args[1] != produce && os.Args[1] != consume {
 		log.Fatalf("Wrong command")
 	}
 
-	configFile := os.Args[1]
-	conf := GetConfig(configFile)
+	conf := utils.ReadConfig()
 
 	topic := "go-kafka-topic"
 
